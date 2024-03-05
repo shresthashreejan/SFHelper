@@ -1,26 +1,80 @@
-// The module 'vscode' contains the VS Code extensibility API
-// Import the module and reference it with the alias vscode in your code below
-import * as vscode from 'vscode';
+import * as vscode from "vscode";
 
-// This method is called when your extension is activated
-// Your extension is activated the very first time the command is executed
+// ctrl '
+
 export function activate(context: vscode.ExtensionContext) {
+    let deploy = vscode.commands.registerCommand("sfhelper.deploy", () => {
+        executeCommand("DEPLOY");
+    });
 
-	// Use the console to output diagnostic information (console.log) and errors (console.error)
-	// This line of code will only be executed once when your extension is activated
-	console.log('Congratulations, your extension "sfhelper" is now active!');
+    let retrieve = vscode.commands.registerCommand("sfhelper.retrieve", () => {
+        executeCommand("RETRIEVE");
+    });
 
-	// The command has been defined in the package.json file
-	// Now provide the implementation of the command with registerCommand
-	// The commandId parameter must match the command field in package.json
-	let disposable = vscode.commands.registerCommand('sfhelper.helloWorld', () => {
-		// The code you place here will be executed every time your command is executed
-		// Display a message box to the user
-		vscode.window.showInformationMessage('Hello World from SFHelper!');
-	});
+    let runTest = vscode.commands.registerCommand("sfhelper.runTest", () => {
+        executeCommand("RUN TEST");
+    });
 
-	context.subscriptions.push(disposable);
+    let deleteDebugLogs = vscode.commands.registerCommand(
+        "sfhelper.deleteDebugLogs",
+        () => {
+            executeCommand("DELETE DEBUG LOGS");
+        }
+    );
+
+    let openDropdown = vscode.commands.registerCommand(
+        "sfhelper.openDropdown",
+        () => {
+            const items = [
+                {
+                    label: "SF Helper: Deploy Active File",
+                    command: "sfhelper.deploy",
+                },
+                {
+                    label: "SF Helper: Retrieve Active File",
+                    command: "sfhelper.retrieve",
+                },
+                {
+                    label: "SF Helper: Run Active Test Class",
+                    command: "sfhelper.runTest",
+                },
+                {
+                    label: "SF Helper: Delete All Debug Logs",
+                    command: "sfhelper.deleteDebugLogs",
+                },
+            ];
+
+            vscode.window.showQuickPick(items).then((selectedItem) => {
+                if (selectedItem) {
+                    vscode.commands.executeCommand(selectedItem.command);
+                }
+            });
+        }
+    );
+
+    context.subscriptions.push(deploy);
+    context.subscriptions.push(retrieve);
+    context.subscriptions.push(runTest);
+    context.subscriptions.push(deleteDebugLogs);
+    context.subscriptions.push(openDropdown);
 }
 
-// This method is called when your extension is deactivated
+function executeCommand(command: string) {
+    const editor = vscode.window.activeTextEditor;
+    if (!editor) {
+        vscode.window.showErrorMessage("No active editor found.");
+        return;
+    }
+
+    const filePath = editor.document.uri.fsPath;
+
+    let terminal = vscode.window.activeTerminal;
+    if (!terminal) {
+        terminal = vscode.window.createTerminal("SFHelper");
+    }
+
+    terminal.sendText(`echo "${command}: ${filePath}"`);
+    terminal.show();
+}
+
 export function deactivate() {}

@@ -14,8 +14,56 @@
   "contributes": {
     "commands": [
       {
-        "command": "sfhelper.helloWorld",
-        "title": "Hello World"
+        "command": "sfhelper.deploy",
+        "title": "SF Helper: Deploy Active File"
+      },
+      {
+        "command": "sfhelper.retrieve",
+        "title": "SF Helper: Retrieve Active File"
+      },
+      {
+        "command": "sfhelper.runTest",
+        "title": "SF Helper: Run Active Test Class"
+      },
+      {
+        "command": "sfhelper.deleteDebugLogs",
+        "title": "SF Helper: Delete All Debug Logs"
+      },
+      {
+        "command": "sfhelper.openDropdown",
+        "title": "SF Helper: Show All Options"
+      }
+    ],
+    "keybindings": [
+      {
+        "command": "sfhelper.deploy",
+        "key": "ctrl+shift+q+d",
+        "mac": "cmd+shift+q+d",
+        "when": "editorTextFocus"
+      },
+      {
+        "command": "sfhelper.retrieve",
+        "key": "ctrl+shift+q+r",
+        "mac": "cmd+shift+q+r",
+        "when": "editorTextFocus"
+      },
+      {
+        "command": "sfhelper.runTest",
+        "key": "ctrl+shift+q+t",
+        "mac": "cmd+shift+q+t",
+        "when": "editorTextFocus"
+      },
+      {
+        "command": "sfhelper.deleteDebugLogs",
+        "key": "ctrl+shift+q+l",
+        "mac": "cmd+shift+q+l",
+        "when": "editorTextFocus"
+      },
+      {
+        "command": "sfhelper.openDropdown",
+        "key": "ctrl+shift+q",
+        "mac": "cmd+shift+q",
+        "when": "editorTextFocus"
       }
     ]
   },
