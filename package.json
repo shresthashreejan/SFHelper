@@ -18,8 +18,16 @@
         "title": "SF Helper: Deploy Active File"
       },
       {
+        "command": "sfhelper.deployFolder",
+        "title": "SF Helper: Deploy Active Folder"
+      },
+      {
         "command": "sfhelper.retrieve",
         "title": "SF Helper: Retrieve Active File"
+      },
+      {
+        "command": "sfhelper.retrieveFolder",
+        "title": "SF Helper: Retrieve Active Folder"
       },
       {
         "command": "sfhelper.runTest",
@@ -37,32 +45,44 @@
     "keybindings": [
       {
         "command": "sfhelper.deploy",
-        "key": "ctrl+shift+q+d",
-        "mac": "cmd+shift+q+d",
+        "key": "ctrl+shift+1",
+        "mac": "cmd+shift+1",
+        "when": "editorTextFocus"
+      },
+      {
+        "command": "sfhelper.deployFolder",
+        "key": "ctrl+shift+2",
+        "mac": "cmd+shift+2",
         "when": "editorTextFocus"
       },
       {
         "command": "sfhelper.retrieve",
-        "key": "ctrl+shift+q+r",
-        "mac": "cmd+shift+q+r",
+        "key": "ctrl+shift+3",
+        "mac": "cmd+shift+3",
+        "when": "editorTextFocus"
+      },
+      {
+        "command": "sfhelper.retrieveFolder",
+        "key": "ctrl+shift+4",
+        "mac": "cmd+shift+4",
         "when": "editorTextFocus"
       },
       {
         "command": "sfhelper.runTest",
-        "key": "ctrl+shift+q+t",
-        "mac": "cmd+shift+q+t",
+        "key": "ctrl+shift+5",
+        "mac": "cmd+shift+5",
         "when": "editorTextFocus"
       },
       {
         "command": "sfhelper.deleteDebugLogs",
-        "key": "ctrl+shift+q+l",
-        "mac": "cmd+shift+q+l",
+        "key": "ctrl+shift+6",
+        "mac": "cmd+shift+6",
         "when": "editorTextFocus"
       },
       {
         "command": "sfhelper.openDropdown",
-        "key": "ctrl+shift+q",
-        "mac": "cmd+shift+q",
+        "key": "ctrl+'",
+        "mac": "cmd+'",
         "when": "editorTextFocus"
       }
     ]
