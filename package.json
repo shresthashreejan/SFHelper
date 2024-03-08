@@ -47,43 +47,43 @@
         "command": "sfhelper.deploy",
         "key": "ctrl+shift+1",
         "mac": "cmd+shift+1",
-        "when": "editorTextFocus"
+        "when": "editorTextFocus || terminalFocus"
       },
       {
         "command": "sfhelper.deployFolder",
         "key": "ctrl+shift+2",
         "mac": "cmd+shift+2",
-        "when": "editorTextFocus"
+        "when": "editorTextFocus || terminalFocus"
       },
       {
         "command": "sfhelper.retrieve",
         "key": "ctrl+shift+3",
         "mac": "cmd+shift+3",
-        "when": "editorTextFocus"
+        "when": "editorTextFocus || terminalFocus"
       },
       {
         "command": "sfhelper.retrieveFolder",
         "key": "ctrl+shift+4",
         "mac": "cmd+shift+4",
-        "when": "editorTextFocus"
+        "when": "editorTextFocus || terminalFocus"
       },
       {
         "command": "sfhelper.runTest",
         "key": "ctrl+shift+5",
         "mac": "cmd+shift+5",
-        "when": "editorTextFocus"
+        "when": "editorTextFocus || terminalFocus"
       },
       {
         "command": "sfhelper.deleteDebugLogs",
         "key": "ctrl+shift+6",
         "mac": "cmd+shift+6",
-        "when": "editorTextFocus"
+        "when": "editorTextFocus || terminalFocus"
       },
       {
         "command": "sfhelper.openDropdown",
         "key": "ctrl+'",
         "mac": "cmd+'",
-        "when": "editorTextFocus"
+        "when": "editorTextFocus || terminalFocus"
       }
     ]
   },

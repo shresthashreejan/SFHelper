@@ -1,6 +1,10 @@
 import * as vscode from "vscode";
 import * as path from "path";
 
+import { powershellPath } from "./powershellPath";
+
+let terminalPath = powershellPath();
+
 export function activate(context: vscode.ExtensionContext) {
     const commands = [
         {
@@ -105,30 +109,43 @@ function executeCommand(command: string) {
             break;
     }
 
-    let terminal = vscode.window.activeTerminal;
-    if (!terminal) {
-        terminal = vscode.window.createTerminal("SFHelper");
+    let terminal;
+    if (terminalPath && terminalPath != null) {
+        terminal = vscode.window.createTerminal({
+            name: "SF Helper",
+            shellPath: terminalPath,
+        });
+    } else {
+        terminal = vscode.window.createTerminal({
+            name: "SF Helper",
+        });
     }
-
     terminal.sendText(`${cmdPrefix} ${filePath} ${cmdSuffix}`);
     terminal.show();
 }
 
 function deleteLogs() {
-    let terminal = vscode.window.activeTerminal;
-    if (!terminal) {
-        terminal = vscode.window.createTerminal("SFHelper");
-    }
-    terminal.sendText(
-        `sf data query -q "SELECT Id FROM ApexLog ORDER BY loglength DESC" -r "csv" | out-file -encoding oem debugLogs.csv | sf data delete bulk -s ApexLog -f debugLogs.csv`
-    );
+    if (terminalPath && terminalPath != null) {
+        let terminal = vscode.window.createTerminal({
+            name: "SF Helper",
+            shellPath: terminalPath,
+        });
 
-    setTimeout(() => {
-        if (terminal) {
+        terminal.sendText(
+            `sf data query -q "SELECT Id FROM ApexLog ORDER BY loglength DESC" -r "csv" | out-file -encoding oem debugLogs.csv | sf data delete bulk -s ApexLog -f debugLogs.csv`
+        );
+        setTimeout(() => {
             terminal.sendText(`del debugLogs.csv`);
-        }
-    }, 5000);
-    terminal.show();
+        }, 2000);
+        terminal.show();
+    } else {
+        let terminal = vscode.window.createTerminal({
+            name: "SF Helper",
+        });
+
+        terminal.sendText(`echo "Powershell not found"`);
+        terminal.show();
+    }
 }
 
 export function deactivate() {}
