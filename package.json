@@ -3,9 +3,9 @@
   "displayName": "SF Helper",
   "publisher": "shreejan",
   "description": "Salesforce Helper streamlines Salesforce development, offering swift access to key operations like deploying, retrieving, running tests, and managing debug logs.",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "engines": {
-    "vscode": "^1.87.0"
+    "vscode": "^1.70.0"
   },
   "categories": [
     "Other"
@@ -102,14 +102,16 @@
     "test": "vscode-test"
   },
   "devDependencies": {
-    "@types/vscode": "^1.87.0",
     "@types/mocha": "^10.0.6",
     "@types/node": "18.x",
     "@typescript-eslint/eslint-plugin": "^7.0.2",
     "@typescript-eslint/parser": "^7.0.2",
-    "eslint": "^8.56.0",
-    "typescript": "^5.3.3",
     "@vscode/test-cli": "^0.0.6",
-    "@vscode/test-electron": "^2.3.9"
+    "@vscode/test-electron": "^2.3.9",
+    "eslint": "^8.56.0",
+    "typescript": "^5.3.3"
+  },
+  "dependencies": {
+    "@types/vscode": "^1.70.0"
   }
 }
