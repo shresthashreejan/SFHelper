@@ -103,6 +103,7 @@ function executeCommand(action: string) {
         case "runTest":
             cmdPrefix = "sf apex run test -n";
             cmdSuffix = "-r human -c -y";
+            filePath = path.basename(filePath);
             break;
         default:
             break;
@@ -120,9 +121,7 @@ function deleteLogs() {
         terminal.sendText(
             `sf data query -q "SELECT Id FROM ApexLog ORDER BY loglength DESC" -r "csv" | out-file -encoding oem debugLogs.csv | sf data delete bulk -s ApexLog -f debugLogs.csv`
         );
-        setTimeout(() => {
-            terminal.sendText(`del debugLogs.csv`);
-        }, 3000);
+        terminal.sendText(`del debugLogs.csv`);
         terminal.show();
     } else {
         let terminal = getTerminal();
