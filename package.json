@@ -2,8 +2,8 @@
   "name": "sfhelper",
   "displayName": "SF Helper",
   "publisher": "shreejan",
-  "description": "",
-  "version": "0.0.2",
+  "description": "Salesforce Helper streamlines Salesforce development, offering swift access to key operations like deploying, retrieving, running tests, and managing debug logs.",
+  "version": "0.0.3",
   "engines": {
     "vscode": "^1.87.0"
   },
