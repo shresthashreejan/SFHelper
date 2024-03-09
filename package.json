@@ -1,14 +1,20 @@
 {
   "name": "sfhelper",
-  "displayName": "SFHelper",
+  "displayName": "SF Helper",
+  "publisher": "shreejan",
   "description": "",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "engines": {
     "vscode": "^1.87.0"
   },
   "categories": [
     "Other"
   ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/shresthashreejan/SFHelper.git"
+  },
+  "icon": "./assets/img/terminal.png",
   "activationEvents": [],
   "main": "./out/extension.js",
   "contributes": {
