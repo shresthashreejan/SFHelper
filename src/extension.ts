@@ -70,7 +70,7 @@ export function activate(context: vscode.ExtensionContext) {
     context.subscriptions.push(openDropdown);
 }
 
-function executeCommand(command: string) {
+function executeCommand(action: string) {
     const editor = vscode.window.activeTextEditor;
     let cmdPrefix: string = "";
     let cmdSuffix: string = "";
@@ -81,7 +81,7 @@ function executeCommand(command: string) {
     }
     let filePath = editor.document.uri.fsPath;
 
-    switch (command) {
+    switch (action) {
         case "deploy":
             cmdPrefix = "sf project deploy start -d";
             cmdSuffix = "-c";
@@ -122,7 +122,7 @@ function deleteLogs() {
         );
         setTimeout(() => {
             terminal.sendText(`del debugLogs.csv`);
-        }, 2000);
+        }, 3000);
         terminal.show();
     } else {
         let terminal = getTerminal();
