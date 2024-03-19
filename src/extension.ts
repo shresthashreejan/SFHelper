@@ -32,6 +32,16 @@ export function activate(context: vscode.ExtensionContext) {
             label: "Run Active Test Class",
         },
         {
+            command: "sfhelper.monitorDebugLogs",
+            action: "monitorDebugLogs",
+            label: "Monitor Debug Logs (Requires Powershell)",
+        },
+        {
+            command: "sfhelper.executeAnonymousCode",
+            action: "executeAnonymousCode",
+            label: "Execute Anonymous Code (Requires Powershell)",
+        },
+        {
             command: "sfhelper.deleteDebugLogs",
             action: "deleteDebugLogs",
             label: "Delete All Debug Logs (Requires Powershell)",
@@ -41,7 +51,11 @@ export function activate(context: vscode.ExtensionContext) {
     commands.forEach(({ command, action }) => {
         context.subscriptions.push(
             vscode.commands.registerCommand(command, () => {
-                if (action === "deleteDebugLogs") {
+                if (action === "monitorDebugLogs") {
+                    console.log("monitorDebugLogs");
+                } else if (action === "executeAnonymousCode") {
+                    console.log("executeAnonymousCode");
+                } else if (action === "deleteDebugLogs") {
                     deleteLogs();
                 } else {
                     executeCommand(action);
@@ -59,7 +73,20 @@ export function activate(context: vscode.ExtensionContext) {
         "sfhelper.openDropdown",
         () => {
             vscode.window.showQuickPick(items).then((selectedItem) => {
-                if (selectedItem && selectedItem.action === "deleteDebugLogs") {
+                if (
+                    selectedItem &&
+                    selectedItem.action === "monitorDebugLogs"
+                ) {
+                    console.log("monitorDebugLogs");
+                } else if (
+                    selectedItem &&
+                    selectedItem.action === "executeAnonymousCode"
+                ) {
+                    console.log("executeAnonymousCode");
+                } else if (
+                    selectedItem &&
+                    selectedItem.action === "deleteDebugLogs"
+                ) {
                     deleteLogs();
                 } else if (selectedItem) {
                     executeCommand(selectedItem.action);

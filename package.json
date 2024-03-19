@@ -40,6 +40,14 @@
         "title": "SF Helper: Run Active Test Class"
       },
       {
+        "command": "sfhelper.monitorDebugLogs",
+        "title": "SF Helper: Monitor Debug Logs"
+      },
+      {
+        "command": "sfhelper.executeAnonymousCode",
+        "title": "SF Helper: Execute Anonymous Apex Code"
+      },
+      {
         "command": "sfhelper.deleteDebugLogs",
         "title": "SF Helper: Delete All Debug Logs"
       },
@@ -80,9 +88,21 @@
         "when": "editorTextFocus || terminalFocus"
       },
       {
-        "command": "sfhelper.deleteDebugLogs",
+        "command": "sfhelper.monitorDebugLogs",
         "key": "ctrl+shift+6",
         "mac": "cmd+shift+6",
+        "when": "editorTextFocus || terminalFocus"
+      },
+      {
+        "command": "sfhelper.executeAnonymousCode",
+        "key": "ctrl+shift+7",
+        "mac": "cmd+shift+7",
+        "when": "editorTextFocus || terminalFocus"
+      },
+      {
+        "command": "sfhelper.deleteDebugLogs",
+        "key": "ctrl+shift+8",
+        "mac": "cmd+shift+8",
         "when": "editorTextFocus || terminalFocus"
       },
       {
