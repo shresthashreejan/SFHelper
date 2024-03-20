@@ -1,23 +1,19 @@
 import * as vscode from "vscode";
 
-function getTerminal(terminalPath?: string) {
-    const terminals = vscode.window.terminals;
-    const sfTerminal = terminals.find(
-        (terminal) => terminal.name === "SF Helper"
+function getTerminal(terminalPath?: string, isLogsTerminal?: boolean) {
+    const terminalName = isLogsTerminal ? "SF Helper Logs" : "SF Helper";
+    const terminal = vscode.window.terminals.find(
+        (t) => t.name === terminalName
     );
 
-    if (!sfTerminal) {
-        if (terminalPath) {
-            return vscode.window.createTerminal({
-                name: "SF Helper",
-                shellPath: terminalPath,
-            });
-        } else {
-            return vscode.window.createTerminal({ name: "SF Helper" });
-        }
+    if (!terminal) {
+        return vscode.window.createTerminal({
+            name: terminalName,
+            ...(terminalPath && { shellPath: terminalPath }),
+        });
     }
 
-    return sfTerminal;
+    return terminal;
 }
 
 export { getTerminal };

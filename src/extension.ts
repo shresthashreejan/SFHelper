@@ -34,12 +34,12 @@ export function activate(context: vscode.ExtensionContext) {
         {
             command: "sfhelper.monitorDebugLogs",
             action: "monitorDebugLogs",
-            label: "Monitor Debug Logs (Requires Powershell)",
+            label: "Monitor Debug Logs (Experimental)",
         },
         {
             command: "sfhelper.executeAnonymousCode",
             action: "executeAnonymousCode",
-            label: "Execute Anonymous Code (Requires Powershell)",
+            label: "Execute Anonymous Code (Experimental)",
         },
         {
             command: "sfhelper.deleteDebugLogs",
@@ -52,7 +52,7 @@ export function activate(context: vscode.ExtensionContext) {
         context.subscriptions.push(
             vscode.commands.registerCommand(command, () => {
                 if (action === "monitorDebugLogs") {
-                    console.log("monitorDebugLogs");
+                    monitorLogs();
                 } else if (action === "executeAnonymousCode") {
                     console.log("executeAnonymousCode");
                 } else if (action === "deleteDebugLogs") {
@@ -77,7 +77,7 @@ export function activate(context: vscode.ExtensionContext) {
                     selectedItem &&
                     selectedItem.action === "monitorDebugLogs"
                 ) {
-                    console.log("monitorDebugLogs");
+                    monitorLogs();
                 } else if (
                     selectedItem &&
                     selectedItem.action === "executeAnonymousCode"
@@ -149,6 +149,21 @@ function deleteLogs() {
             `sf data query -q "SELECT Id FROM ApexLog ORDER BY loglength DESC" -r "csv" | out-file -encoding oem debugLogs.csv | sf data delete bulk -s ApexLog -f debugLogs.csv`
         );
         terminal.sendText(`del debugLogs.csv`);
+        terminal.show();
+    } else {
+        let terminal = getTerminal();
+        terminal.sendText(`echo "Powershell not found."`);
+        terminal.show();
+    }
+}
+
+function monitorLogs() {
+    let terminalPath = powershellPath();
+    if (terminalPath && terminalPath != null) {
+        let terminal = getTerminal(terminalPath, true);
+        terminal.sendText(
+            `sf apex tail log | select-string -pattern "assert|error"`
+        );
         terminal.show();
     } else {
         let terminal = getTerminal();
