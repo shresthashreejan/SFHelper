@@ -1,0 +1,17 @@
+{
+    "status": 0,
+    "result": {
+        "records": [
+            {
+                "attributes": {
+                    "type": "DebugLevel",
+                    "url": "/services/data/v60.0/tooling/sobjects/DebugLevel/7dlE2000000DstpIAC"
+                },
+                "Id": "7dlE2000000DstpIAC",
+                "DeveloperName": "SFDC_DevConsole"
+            }
+        ],
+        "totalSize": 1,
+        "done": true
+    }
+}

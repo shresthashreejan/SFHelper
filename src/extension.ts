@@ -1,5 +1,6 @@
 import * as vscode from "vscode";
 import * as path from "path";
+import * as fs from "fs";
 
 import { powershellPath } from "./powershellPath";
 import { getTerminal } from "./getTerminal";
@@ -143,33 +144,62 @@ function executeCommand(action: string) {
 
 function deleteLogs() {
     let terminalPath = powershellPath();
-    if (terminalPath && terminalPath != null) {
-        let terminal = getTerminal(terminalPath);
-        terminal.sendText(
-            `sf data query -q "SELECT Id FROM ApexLog ORDER BY loglength DESC" -r "csv" | out-file -encoding oem debugLogs.csv | sf data delete bulk -s ApexLog -f debugLogs.csv`
-        );
-        terminal.sendText(`del debugLogs.csv`);
-        terminal.show();
-    } else {
-        let terminal = getTerminal();
-        terminal.sendText(`echo "Powershell not found."`);
-        terminal.show();
+    if (!terminalPath) {
+        vscode.window.showErrorMessage("Powershell not found.");
+        return;
     }
+
+    const terminal = getTerminal(terminalPath);
+    terminal.sendText(
+        `sf data query -q "SELECT Id FROM ApexLog ORDER BY loglength DESC" -r "csv" | out-file -encoding oem debugLogs.csv | sf data delete bulk -s ApexLog -f debugLogs.csv`
+    );
+    terminal.sendText(`del debugLogs.csv`);
+    terminal.show();
 }
 
-function monitorLogs() {
-    let terminalPath = powershellPath();
-    if (terminalPath && terminalPath != null) {
-        let terminal = getTerminal(terminalPath, true);
-        terminal.sendText(
-            `sf apex tail log | select-string -pattern "assert|error"`
-        );
-        terminal.show();
-    } else {
-        let terminal = getTerminal();
-        terminal.sendText(`echo "Powershell not found."`);
-        terminal.show();
+async function monitorLogs() {
+    const terminalPath = powershellPath();
+    if (!terminalPath) {
+        vscode.window.showErrorMessage("Powershell not found.");
+        return;
     }
+
+    const terminal = getTerminal(terminalPath, true);
+    try {
+        const debugLevelData = await fetchDataFromDebugLevel(terminal);
+        let debugLevelName =
+            debugLevelData && debugLevelData.result
+                ? debugLevelData.result?.records[0]?.DeveloperName
+                : null;
+
+        if (!debugLevelName) {
+            debugLevelName = "SF_Helper";
+            createDebugLevel(terminal, debugLevelName);
+        }
+
+        terminal.sendText(
+            `sf apex tail log -c -d ${debugLevelName} | select-string -pattern "assert|error"`
+        );
+    } catch (error) {
+        console.error(error);
+        return;
+    }
+    terminal.show();
+}
+
+async function fetchDataFromDebugLevel(terminal: vscode.Terminal) {
+    terminal.sendText(
+        'sf data query -q "SELECT Id, DeveloperName FROM DebugLevel" -t -r "json" | out-file -encoding oem debugLevel.json'
+    );
+    await new Promise((resolve) => setTimeout(resolve, 2000));
+    const data = fs.readFileSync("debugLevel.json", "utf8");
+    return JSON.parse(data);
+}
+
+function createDebugLevel(terminal: vscode.Terminal, debugLevelName: string) {
+    terminal.sendText(
+        `sf data create record -s DebugLevel -t -v "DeveloperName=${debugLevelName} MasterLabel=${debugLevelName} ApexCode=FINEST ApexProfiling=FINER Callout=DEBUG Database=DEBUG System=DEBUG Validation=FINE Visualforce=FINE"`
+    );
 }
 
 export function deactivate() {}
