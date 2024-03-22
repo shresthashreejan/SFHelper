@@ -74,23 +74,20 @@ export function activate(context: vscode.ExtensionContext) {
         "sfhelper.openDropdown",
         () => {
             vscode.window.showQuickPick(items).then((selectedItem) => {
-                if (
-                    selectedItem &&
-                    selectedItem.action === "monitorDebugLogs"
-                ) {
-                    monitorLogs();
-                } else if (
-                    selectedItem &&
-                    selectedItem.action === "executeAnonymousCode"
-                ) {
-                    console.log("executeAnonymousCode");
-                } else if (
-                    selectedItem &&
-                    selectedItem.action === "deleteDebugLogs"
-                ) {
-                    deleteLogs();
-                } else if (selectedItem) {
-                    executeCommand(selectedItem.action);
+                if (selectedItem) {
+                    switch (selectedItem.action) {
+                        case "monitorDebugLogs":
+                            monitorLogs();
+                            break;
+                        case "executeAnonymousCode":
+                            executeAnonymousCode();
+                            break;
+                        case "deleteDebugLogs":
+                            deleteLogs();
+                            break;
+                        default:
+                            executeCommand(selectedItem.action);
+                    }
                 }
             });
         }
@@ -200,6 +197,12 @@ function createDebugLevel(terminal: vscode.Terminal, debugLevelName: string) {
     terminal.sendText(
         `sf data create record -s DebugLevel -t -v "DeveloperName=${debugLevelName} MasterLabel=${debugLevelName} ApexCode=FINEST ApexProfiling=FINER Callout=DEBUG Database=DEBUG System=DEBUG Validation=FINE Visualforce=FINE"`
     );
+}
+
+function executeAnonymousCode() {
+    let terminal = getTerminal();
+    terminal.sendText(`sf apex run`);
+    terminal.show();
 }
 
 export function deactivate() {}
