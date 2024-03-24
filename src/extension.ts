@@ -175,6 +175,7 @@ async function monitorLogs() {
         }
 
         terminal.sendText(`del debugLevel.json`);
+        terminal.sendText(`clear`);
         terminal.sendText(
             `sf apex tail log -c -d ${debugLevelName} | select-string -pattern "assert|error"`
         );
@@ -189,7 +190,7 @@ async function fetchDataFromDebugLevel(terminal: vscode.Terminal) {
     terminal.sendText(
         'sf data query -q "SELECT Id, DeveloperName FROM DebugLevel" -t -r "json" | out-file -encoding oem debugLevel.json'
     );
-    await new Promise((resolve) => setTimeout(resolve, 2000));
+    await new Promise((resolve) => setTimeout(resolve, 5000));
     const data = fs.readFileSync("debugLevel.json", "utf8");
     return JSON.parse(data);
 }
@@ -201,23 +202,34 @@ function createDebugLevel(terminal: vscode.Terminal, debugLevelName: string) {
 }
 
 function executeAnonymousCode() {
-    const fileName = "anonymousCode.apex";
-
     if (
         vscode.workspace.workspaceFolders &&
         vscode.workspace.workspaceFolders.length > 0
     ) {
+        const fileName = "anonymousCode.apex";
         const filePath = path.join(
             vscode.workspace.workspaceFolders[0].uri.fsPath,
             fileName
         );
 
+        if (!fs.existsSync(filePath)) {
+            fs.writeFileSync(
+                filePath,
+                "// Write your Apex code here, then press Ctrl+S to execute anonymously.",
+                "utf-8"
+            );
+        }
+
         vscode.workspace
             .openTextDocument(vscode.Uri.file(filePath))
             .then((document) => {
                 vscode.window.showTextDocument(document).then(() => {
-                    vscode.workspace.onDidSaveTextDocument((savedDocument) => {
-                        if (savedDocument.fileName === filePath) {
+                    vscode.workspace.onWillSaveTextDocument((event) => {
+                        if (
+                            event.document.fileName === filePath &&
+                            event.reason ===
+                                vscode.TextDocumentSaveReason.Manual
+                        ) {
                             const terminal = getTerminal();
                             terminal.sendText(
                                 "sf apex run -f ./anonymousCode.apex"
@@ -228,8 +240,6 @@ function executeAnonymousCode() {
                     });
                 });
             });
-    } else {
-        vscode.window.showErrorMessage("No workspace found.");
     }
 }
 
