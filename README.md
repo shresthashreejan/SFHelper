@@ -1,6 +1,6 @@
 # SF Helper Extension
 
-SF Helper is a Visual Studio Code extension designed to streamline Salesforce development by providing quick access to common operations such as deploying, retrieving, running tests, and managing debug logs.
+SF Helper is a Visual Studio Code extension designed to streamline Salesforce development by providing quick access to common operations such as deploying, retrieving, running tests, executing anonymous code and managing debug logs.
 
 ## Features
 
@@ -9,6 +9,8 @@ SF Helper is a Visual Studio Code extension designed to streamline Salesforce de
 - **Retrieve Active File:** Retrieve the currently active Salesforce file.
 - **Retrieve Active Folder:** Retrieve all files in the active folder.
 - **Run Active Test Class:** Run tests in the currently active test class.
+- **Execute Anonymous Apex Code (Requires Powershell):** Execute anonymous Apex code.
+- **Monitor Debug Logs (Requires Powershell):** Monitor debug logs in real-time.
 - **Delete All Debug Logs (Requires Powershell):** Delete all debug logs from the org.
 
 ## Prerequisites
@@ -36,7 +38,9 @@ Once installed, you can utilize the SF Helper extension using the following keyb
 - **Retrieve Active File:** `Ctrl+Shift+3` (Windows/Linux) or `Cmd+Shift+3` (Mac)
 - **Retrieve Active Folder:** `Ctrl+Shift+4` (Windows/Linux) or `Cmd+Shift+4` (Mac)
 - **Run Active Test Class:** `Ctrl+Shift+5` (Windows/Linux) or `Cmd+Shift+5` (Mac)
-- **Delete All Debug Logs:** `Ctrl+Shift+6` (Windows/Linux) or `Cmd+Shift+6` (Mac)
+- **Execute Anonymous Apex Code (Requires Powershell):** `Ctrl+Shift+6` (Windows/Linux) or `Cmd+Shift+6` (Mac)
+- **Monitor Debug Logs (Requires Powershell):** `Ctrl+Shift+7` (Windows/Linux) or `Cmd+Shift+7` (Mac)
+- **Delete All Debug Logs:** `Ctrl+Shift+8` (Windows/Linux) or `Cmd+Shift+8` (Mac)
 - **Show All Options (Dropdown):** `Ctrl+'` (Windows/Linux) or `Cmd+'` (Mac)
 
 You can use these shortcuts within the editor to quickly access and execute the corresponding actions provided by SF Helper.

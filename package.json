@@ -2,8 +2,8 @@
   "name": "sfhelper",
   "displayName": "SF Helper",
   "publisher": "shreejan",
-  "description": "Salesforce Helper streamlines Salesforce development, offering swift access to key operations like deploying, retrieving, running tests, and managing debug logs.",
-  "version": "0.0.8",
+  "description": "Salesforce Helper streamlines Salesforce development, offering swift access to key operations like deploying, retrieving, running tests, executing anonymous code, and managing debug logs.",
+  "version": "0.0.9",
   "engines": {
     "vscode": "^1.70.0"
   },
@@ -40,12 +40,12 @@
         "title": "SF Helper: Run Active Test Class"
       },
       {
-        "command": "sfhelper.monitorDebugLogs",
-        "title": "SF Helper: Monitor Debug Logs"
-      },
-      {
         "command": "sfhelper.executeAnonymousCode",
         "title": "SF Helper: Execute Anonymous Apex Code"
+      },
+      {
+        "command": "sfhelper.monitorDebugLogs",
+        "title": "SF Helper: Monitor Debug Logs"
       },
       {
         "command": "sfhelper.deleteDebugLogs",
@@ -88,13 +88,13 @@
         "when": "editorTextFocus || terminalFocus"
       },
       {
-        "command": "sfhelper.monitorDebugLogs",
+        "command": "sfhelper.executeAnonymousCode",
         "key": "ctrl+shift+6",
         "mac": "cmd+shift+6",
         "when": "editorTextFocus || terminalFocus"
       },
       {
-        "command": "sfhelper.executeAnonymousCode",
+        "command": "sfhelper.monitorDebugLogs",
         "key": "ctrl+shift+7",
         "mac": "cmd+shift+7",
         "when": "editorTextFocus || terminalFocus"

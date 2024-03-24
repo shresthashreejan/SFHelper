@@ -33,14 +33,14 @@ export function activate(context: vscode.ExtensionContext) {
             label: "Run Active Test Class",
         },
         {
-            command: "sfhelper.monitorDebugLogs",
-            action: "monitorDebugLogs",
-            label: "Monitor Debug Logs (Experimental)",
-        },
-        {
             command: "sfhelper.executeAnonymousCode",
             action: "executeAnonymousCode",
-            label: "Execute Anonymous Code (Experimental)",
+            label: "Execute Anonymous Code (Requires Powershell)",
+        },
+        {
+            command: "sfhelper.monitorDebugLogs",
+            action: "monitorDebugLogs",
+            label: "Monitor Debug Logs (Requires Powershell)",
         },
         {
             command: "sfhelper.deleteDebugLogs",
@@ -52,14 +52,18 @@ export function activate(context: vscode.ExtensionContext) {
     commands.forEach(({ command, action }) => {
         context.subscriptions.push(
             vscode.commands.registerCommand(command, () => {
-                if (action === "monitorDebugLogs") {
-                    monitorLogs();
-                } else if (action === "executeAnonymousCode") {
-                    executeAnonymousCode();
-                } else if (action === "deleteDebugLogs") {
-                    deleteLogs();
-                } else {
-                    executeCommand(action);
+                switch (action) {
+                    case "executeAnonymousCode":
+                        executeAnonymousCode();
+                        break;
+                    case "monitorDebugLogs":
+                        monitorLogs();
+                        break;
+                    case "deleteDebugLogs":
+                        deleteLogs();
+                        break;
+                    default:
+                        executeCommand(action);
                 }
             })
         );
@@ -76,11 +80,11 @@ export function activate(context: vscode.ExtensionContext) {
             vscode.window.showQuickPick(items).then((selectedItem) => {
                 if (selectedItem) {
                     switch (selectedItem.action) {
-                        case "monitorDebugLogs":
-                            monitorLogs();
-                            break;
                         case "executeAnonymousCode":
                             executeAnonymousCode();
+                            break;
+                        case "monitorDebugLogs":
+                            monitorLogs();
                             break;
                         case "deleteDebugLogs":
                             deleteLogs();
@@ -139,19 +143,46 @@ function executeCommand(action: string) {
     terminal.show();
 }
 
-function deleteLogs() {
-    let terminalPath = powershellPath();
-    if (!terminalPath) {
-        vscode.window.showErrorMessage("Powershell not found.");
-        return;
-    }
+function executeAnonymousCode() {
+    if (
+        vscode.workspace.workspaceFolders &&
+        vscode.workspace.workspaceFolders.length > 0
+    ) {
+        const fileName = "anonymouscode.apex";
+        const filePath = path.join(
+            vscode.workspace.workspaceFolders[0].uri.fsPath,
+            fileName
+        );
 
-    const terminal = getTerminal(terminalPath);
-    terminal.sendText(
-        `sf data query -q "SELECT Id FROM ApexLog ORDER BY loglength DESC" -r "csv" | out-file -encoding oem debugLogs.csv | sf data delete bulk -s ApexLog -f debugLogs.csv`
-    );
-    terminal.sendText(`del debugLogs.csv`);
-    terminal.show();
+        if (!fs.existsSync(filePath)) {
+            fs.writeFileSync(
+                filePath,
+                "// Write your Apex code here, then press Ctrl+S to execute anonymously.",
+                "utf-8"
+            );
+        }
+
+        vscode.workspace
+            .openTextDocument(vscode.Uri.file(filePath))
+            .then((document) => {
+                vscode.window.showTextDocument(document).then(() => {
+                    vscode.workspace.onWillSaveTextDocument((event) => {
+                        if (
+                            event.document.fileName === filePath &&
+                            event.reason ===
+                                vscode.TextDocumentSaveReason.Manual
+                        ) {
+                            const terminal = getTerminal();
+                            terminal.sendText(
+                                "sf apex run -f ./anonymouscode.apex"
+                            );
+                            terminal.sendText("del anonymouscode.apex");
+                            terminal.show();
+                        }
+                    });
+                });
+            });
+    }
 }
 
 async function monitorLogs() {
@@ -201,46 +232,19 @@ function createDebugLevel(terminal: vscode.Terminal, debugLevelName: string) {
     );
 }
 
-function executeAnonymousCode() {
-    if (
-        vscode.workspace.workspaceFolders &&
-        vscode.workspace.workspaceFolders.length > 0
-    ) {
-        const fileName = "anonymousCode.apex";
-        const filePath = path.join(
-            vscode.workspace.workspaceFolders[0].uri.fsPath,
-            fileName
-        );
-
-        if (!fs.existsSync(filePath)) {
-            fs.writeFileSync(
-                filePath,
-                "// Write your Apex code here, then press Ctrl+S to execute anonymously.",
-                "utf-8"
-            );
-        }
-
-        vscode.workspace
-            .openTextDocument(vscode.Uri.file(filePath))
-            .then((document) => {
-                vscode.window.showTextDocument(document).then(() => {
-                    vscode.workspace.onWillSaveTextDocument((event) => {
-                        if (
-                            event.document.fileName === filePath &&
-                            event.reason ===
-                                vscode.TextDocumentSaveReason.Manual
-                        ) {
-                            const terminal = getTerminal();
-                            terminal.sendText(
-                                "sf apex run -f ./anonymousCode.apex"
-                            );
-                            terminal.sendText("del anonymousCode.apex");
-                            terminal.show();
-                        }
-                    });
-                });
-            });
+function deleteLogs() {
+    let terminalPath = powershellPath();
+    if (!terminalPath) {
+        vscode.window.showErrorMessage("Powershell not found.");
+        return;
     }
+
+    const terminal = getTerminal(terminalPath);
+    terminal.sendText(
+        `sf data query -q "SELECT Id FROM ApexLog ORDER BY loglength DESC" -r "csv" | out-file -encoding oem debugLogs.csv | sf data delete bulk -s ApexLog -f debugLogs.csv`
+    );
+    terminal.sendText(`del debugLogs.csv`);
+    terminal.show();
 }
 
 export function deactivate() {}
