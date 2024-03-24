@@ -221,7 +221,7 @@ async function fetchDataFromDebugLevel(terminal: vscode.Terminal) {
     terminal.sendText(
         'sf data query -q "SELECT Id, DeveloperName FROM DebugLevel" -t -r "json" | out-file -encoding oem debugLevel.json'
     );
-    await new Promise((resolve) => setTimeout(resolve, 5000));
+    await new Promise((resolve) => setTimeout(resolve, 10000));
     const data = fs.readFileSync("debugLevel.json", "utf8");
     return JSON.parse(data);
 }
