@@ -54,8 +54,6 @@ export function activate(context: vscode.ExtensionContext) {
             vscode.commands.registerCommand(command, () => {
                 if (action === "monitorDebugLogs") {
                     monitorLogs();
-                } else if (action === "executeAnonymousCode") {
-                    console.log("executeAnonymousCode");
                 } else if (action === "deleteDebugLogs") {
                     deleteLogs();
                 } else {
@@ -78,9 +76,6 @@ export function activate(context: vscode.ExtensionContext) {
                     switch (selectedItem.action) {
                         case "monitorDebugLogs":
                             monitorLogs();
-                            break;
-                        case "executeAnonymousCode":
-                            executeAnonymousCode();
                             break;
                         case "deleteDebugLogs":
                             deleteLogs();
@@ -130,6 +125,10 @@ function executeCommand(action: string) {
             cmdSuffix = "-r human -c -y";
             filePath = path.basename(filePath, path.extname(filePath));
             break;
+        case "executeAnonymousCode":
+            cmdPrefix = "sf apex run";
+            cmdSuffix = "";
+            filePath = "";
         default:
             break;
     }
@@ -173,7 +172,7 @@ async function monitorLogs() {
             debugLevelName = "SF_Helper";
             createDebugLevel(terminal, debugLevelName);
         }
-
+        terminal.sendText(`del debugLevel.json`);
         terminal.sendText(
             `sf apex tail log -c -d ${debugLevelName} | select-string -pattern "assert|error"`
         );
@@ -197,12 +196,6 @@ function createDebugLevel(terminal: vscode.Terminal, debugLevelName: string) {
     terminal.sendText(
         `sf data create record -s DebugLevel -t -v "DeveloperName=${debugLevelName} MasterLabel=${debugLevelName} ApexCode=FINEST ApexProfiling=FINER Callout=DEBUG Database=DEBUG System=DEBUG Validation=FINE Visualforce=FINE"`
     );
-}
-
-function executeAnonymousCode() {
-    let terminal = getTerminal();
-    terminal.sendText(`sf apex run`);
-    terminal.show();
 }
 
 export function deactivate() {}
