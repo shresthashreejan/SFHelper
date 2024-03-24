@@ -55,7 +55,7 @@ export function activate(context: vscode.ExtensionContext) {
                 if (action === "monitorDebugLogs") {
                     monitorLogs();
                 } else if (action === "executeAnonymousCode") {
-                    console.log("executeAnonymousCode");
+                    executeAnonymousCode();
                 } else if (action === "deleteDebugLogs") {
                     deleteLogs();
                 } else {
