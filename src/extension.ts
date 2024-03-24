@@ -174,6 +174,7 @@ async function monitorLogs() {
             createDebugLevel(terminal, debugLevelName);
         }
 
+        terminal.sendText(`del debugLevel.json`);
         terminal.sendText(
             `sf apex tail log -c -d ${debugLevelName} | select-string -pattern "assert|error"`
         );
@@ -200,9 +201,36 @@ function createDebugLevel(terminal: vscode.Terminal, debugLevelName: string) {
 }
 
 function executeAnonymousCode() {
-    let terminal = getTerminal();
-    terminal.sendText(`sf apex run`);
-    terminal.show();
+    const fileName = "anonymousCode.apex";
+
+    if (
+        vscode.workspace.workspaceFolders &&
+        vscode.workspace.workspaceFolders.length > 0
+    ) {
+        const filePath = path.join(
+            vscode.workspace.workspaceFolders[0].uri.fsPath,
+            fileName
+        );
+
+        vscode.workspace
+            .openTextDocument(vscode.Uri.file(filePath))
+            .then((document) => {
+                vscode.window.showTextDocument(document).then(() => {
+                    vscode.workspace.onDidSaveTextDocument((savedDocument) => {
+                        if (savedDocument.fileName === filePath) {
+                            const terminal = getTerminal();
+                            terminal.sendText(
+                                "sf apex run -f ./anonymousCode.apex"
+                            );
+                            terminal.sendText("del anonymousCode.apex");
+                            terminal.show();
+                        }
+                    });
+                });
+            });
+    } else {
+        vscode.window.showErrorMessage("No workspace found.");
+    }
 }
 
 export function deactivate() {}
