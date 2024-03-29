@@ -208,7 +208,7 @@ async function monitorLogs() {
         terminal.sendText(`del debugLevel.json`);
         terminal.sendText(`clear`);
         terminal.sendText(
-            `sf apex tail log -c -d ${debugLevelName} | select-string -pattern "assert|error"`
+            `sf apex tail log -c -d ${debugLevelName} | select-string -pattern "exception"`
         );
     } catch (error) {
         console.error(error);
