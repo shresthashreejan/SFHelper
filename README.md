@@ -4,14 +4,14 @@ SF Helper is a Visual Studio Code extension designed to streamline Salesforce de
 
 ## Features
 
-- **Deploy Active File:** Deploy the currently active Salesforce file.
-- **Deploy Active Folder:** Deploy all files in the active folder.
-- **Retrieve Active File:** Retrieve the currently active Salesforce file.
-- **Retrieve Active Folder:** Retrieve all files in the active folder.
-- **Run Active Test Class:** Run tests in the currently active test class.
-- **Execute Anonymous Apex Code:** Execute anonymous Apex code.
-- **Monitor Debug Logs:** Monitor debug logs in real-time.
-- **Delete All Debug Logs:** Delete all debug logs from the org.
+-   **Deploy Active File:** Deploy the currently active Salesforce file.
+-   **Deploy Active Folder:** Deploy all files in the active folder.
+-   **Retrieve Active File:** Retrieve the currently active Salesforce file.
+-   **Retrieve Active Folder:** Retrieve all files in the active folder.
+-   **Run Active Test Class:** Run tests in the currently active test class.
+-   **Execute Anonymous Apex Code:** Execute anonymous Apex code.
+-   **Monitor Debug Logs:** Monitor debug logs in real-time.
+-   **Delete All Debug Logs:** Delete all debug logs from the org.
 
 ## Prerequisites
 
@@ -33,21 +33,21 @@ To install the SF Helper extension, follow these steps:
 
 Once installed, you can utilize the SF Helper extension using the following keyboard shortcuts:
 
-- **Deploy Active File:** `Ctrl+Shift+1` (Windows/Linux) or `Cmd+Shift+1` (Mac)
-- **Deploy Active Folder:** `Ctrl+Shift+2` (Windows/Linux) or `Cmd+Shift+2` (Mac)
-- **Retrieve Active File:** `Ctrl+Shift+3` (Windows/Linux) or `Cmd+Shift+3` (Mac)
-- **Retrieve Active Folder:** `Ctrl+Shift+4` (Windows/Linux) or `Cmd+Shift+4` (Mac)
-- **Run Active Test Class:** `Ctrl+Shift+5` (Windows/Linux) or `Cmd+Shift+5` (Mac)
-- **Execute Anonymous Apex Code:** `Ctrl+Shift+6` (Windows/Linux) or `Cmd+Shift+6` (Mac)
-- **Monitor Debug Logs:** `Ctrl+Shift+7` (Windows/Linux) or `Cmd+Shift+7` (Mac)
-- **Delete All Debug Logs:** `Ctrl+Shift+8` (Windows/Linux) or `Cmd+Shift+8` (Mac)
-- **Show All Options (Dropdown):** `Ctrl+'` (Windows/Linux) or `Cmd+'` (Mac)
+-   **Deploy Active File:** `Ctrl+Shift+1` (Windows/Linux) or `Cmd+Shift+1` (Mac)
+-   **Deploy Active Folder:** `Ctrl+Shift+2` (Windows/Linux) or `Cmd+Shift+2` (Mac)
+-   **Retrieve Active File:** `Ctrl+Shift+3` (Windows/Linux) or `Cmd+Shift+3` (Mac)
+-   **Retrieve Active Folder:** `Ctrl+Shift+4` (Windows/Linux) or `Cmd+Shift+4` (Mac)
+-   **Run Active Test Class:** `Ctrl+Shift+5` (Windows/Linux) or `Cmd+Shift+5` (Mac)
+-   **Execute Anonymous Apex Code:** `Ctrl+Shift+6` (Windows/Linux) or `Cmd+Shift+6` (Mac)
+-   **Monitor Debug Logs:** `Ctrl+Shift+7` (Windows/Linux) or `Cmd+Shift+7` (Mac)
+-   **Delete All Debug Logs:** `Ctrl+Shift+8` (Windows/Linux) or `Cmd+Shift+8` (Mac)
+-   **Show All Options (Dropdown):** `Ctrl+'` (Windows/Linux) or `Cmd+'` (Mac)
 
 You can use these shortcuts within the editor to quickly access and execute the corresponding actions provided by SF Helper.
 
 ## Contributing
 
-If you encounter any issues or have suggestions for improvement, feel free to contribute to the project by submitting bug reports or pull requests on the ([GitHub Repository](https://github.com/shresthashreejan/SFHelper)).
+If you encounter any issues or have suggestions for improvement, feel free to contribute to the project by submitting bug reports or pull requests on the [GitHub Repository](https://github.com/shresthashreejan/SFHelper).
 
 ---
 
