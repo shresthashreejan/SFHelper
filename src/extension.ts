@@ -1,9 +1,12 @@
 import * as vscode from "vscode";
 import * as path from "path";
 import * as fs from "fs";
+import os from "os";
 
-import { powershellPath } from "./powershellPath";
 import { getTerminal } from "./getTerminal";
+
+const platform = os.platform();
+const unixSystem: boolean = platform !== "win32" ? true : false;
 
 export function activate(context: vscode.ExtensionContext) {
     const commands = [
@@ -35,17 +38,17 @@ export function activate(context: vscode.ExtensionContext) {
         {
             command: "sfhelper.executeAnonymousCode",
             action: "executeAnonymousCode",
-            label: "Execute Anonymous Code (Requires Powershell)",
+            label: "Execute Anonymous Code",
         },
         {
             command: "sfhelper.monitorDebugLogs",
             action: "monitorDebugLogs",
-            label: "Monitor Debug Logs (Requires Powershell)",
+            label: "Monitor Debug Logs",
         },
         {
             command: "sfhelper.deleteDebugLogs",
             action: "deleteDebugLogs",
-            label: "Delete All Debug Logs (Requires Powershell)",
+            label: "Delete All Debug Logs",
         },
     ];
 
@@ -138,7 +141,7 @@ function executeCommand(action: string) {
             break;
     }
 
-    let terminal = getTerminal();
+    let terminal = getTerminal(false);
     terminal.sendText(`${cmdPrefix} ${filePath} ${cmdSuffix}`);
     terminal.show();
 }
@@ -172,11 +175,10 @@ function executeAnonymousCode() {
                             event.reason ===
                                 vscode.TextDocumentSaveReason.Manual
                         ) {
-                            const terminal = getTerminal();
-                            terminal.sendText(
-                                "sf apex run -f ./anonymouscode.apex"
-                            );
-                            terminal.sendText("del anonymouscode.apex");
+                            let delCommand = unixSystem ? "rm" : "del";
+                            const terminal = getTerminal(false);
+                            terminal.sendText(`sf apex run -f ./${fileName}`);
+                            terminal.sendText(`${delCommand} ${fileName}`);
                             terminal.show();
                         }
                     });
@@ -186,13 +188,7 @@ function executeAnonymousCode() {
 }
 
 async function monitorLogs() {
-    const terminalPath = powershellPath();
-    if (!terminalPath) {
-        vscode.window.showErrorMessage("Powershell not found.");
-        return;
-    }
-
-    const terminal = getTerminal(terminalPath, true);
+    const terminal = getTerminal(true);
     try {
         const debugLevelData = await fetchDataFromDebugLevel(terminal);
         let debugLevelName =
@@ -205,11 +201,14 @@ async function monitorLogs() {
             createDebugLevel(terminal, debugLevelName);
         }
 
-        terminal.sendText(`del debugLevel.json`);
+        let monitorCommand = unixSystem
+            ? `sf apex tail log -c -d ${debugLevelName} | select-string -pattern "exception"`
+            : `sf apex tail log -c -d ${debugLevelName} | grep "exception"`;
+        let delCommand = unixSystem ? "rm" : "del";
+
+        terminal.sendText(`${delCommand} debuglevel.json`);
         terminal.sendText(`clear`);
-        terminal.sendText(
-            `sf apex tail log -c -d ${debugLevelName} | select-string -pattern "exception"`
-        );
+        terminal.sendText(monitorCommand);
     } catch (error) {
         console.error(error);
         return;
@@ -218,11 +217,13 @@ async function monitorLogs() {
 }
 
 async function fetchDataFromDebugLevel(terminal: vscode.Terminal) {
-    terminal.sendText(
-        'sf data query -q "SELECT Id, DeveloperName FROM DebugLevel" -t -r "json" | out-file -encoding oem debugLevel.json'
-    );
+    let fetchCommand = unixSystem
+        ? 'sf data query -q "SELECT Id, DeveloperName FROM DebugLevel" -t -r "json" > debuglevel.json'
+        : 'sf data query -q "SELECT Id, DeveloperName FROM DebugLevel" -t -r "json" | out-file -encoding oem debuglevel.json';
+
+    terminal.sendText(fetchCommand);
     await new Promise((resolve) => setTimeout(resolve, 10000));
-    const data = fs.readFileSync("debugLevel.json", "utf8");
+    const data = fs.readFileSync("debuglevel.json", "utf8");
     return JSON.parse(data);
 }
 
@@ -233,17 +234,16 @@ function createDebugLevel(terminal: vscode.Terminal, debugLevelName: string) {
 }
 
 function deleteLogs() {
-    let terminalPath = powershellPath();
-    if (!terminalPath) {
-        vscode.window.showErrorMessage("Powershell not found.");
-        return;
-    }
+    let terminal = getTerminal(false);
+    let csvFile = "debuglogs.csv";
+    let delCommand = unixSystem ? "rm" : "del";
+    let delLogsCommand = unixSystem
+        ? `sf data query -q "SELECT Id FROM ApexLog ORDER BY loglength DESC" -r "csv" > ${csvFile}`
+        : `sf data query -q "SELECT Id FROM ApexLog ORDER BY loglength DESC" -r "csv" | out-file -encoding oem ${csvFile}`;
 
-    const terminal = getTerminal(terminalPath);
-    terminal.sendText(
-        `sf data query -q "SELECT Id FROM ApexLog ORDER BY loglength DESC" -r "csv" | out-file -encoding oem debugLogs.csv | sf data delete bulk -s ApexLog -f debugLogs.csv`
-    );
-    terminal.sendText(`del debugLogs.csv`);
+    terminal.sendText(delLogsCommand);
+    terminal.sendText(`sf data delete bulk -s ApexLog -f ${csvFile}`);
+    terminal.sendText(`${delCommand} ${csvFile}`);
     terminal.show();
 }
 
