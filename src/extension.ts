@@ -177,16 +177,30 @@ function executeAnonymousCode() {
                                     event.reason ===
                                         vscode.TextDocumentSaveReason.Manual
                                 ) {
-                                    let delCommand = unixSystem ? "rm" : "del";
                                     const terminal = getTerminal(false);
                                     terminal.sendText(
                                         `sf apex run -f ./${fileName}`
                                     );
-                                    terminal.sendText(
-                                        `${delCommand} ${fileName}`
-                                    );
                                     terminal.show();
-                                    willSaveTextDocumentDisposable.dispose();
+                                    const didCloseTextDocumentDisposable =
+                                        vscode.workspace.onDidCloseTextDocument(
+                                            (document) => {
+                                                if (
+                                                    document.fileName.endsWith(
+                                                        "anonymouscode.apex"
+                                                    )
+                                                ) {
+                                                    let delCommand = unixSystem
+                                                        ? "rm"
+                                                        : "del";
+                                                    terminal.sendText(
+                                                        `${delCommand} ${fileName}`
+                                                    );
+                                                    willSaveTextDocumentDisposable.dispose();
+                                                    didCloseTextDocumentDisposable.dispose();
+                                                }
+                                            }
+                                        );
                                 }
                             });
                     });
