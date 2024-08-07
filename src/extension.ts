@@ -187,25 +187,6 @@ function executeAnonymousCode() {
                                         `sf apex run -f ./${fileName}`
                                     );
                                     terminal.show();
-                                    vscode.workspace.onDidCloseTextDocument(
-                                        (document) => {
-                                            if (
-                                                document.fileName.endsWith(
-                                                    "anonymouscode.apex"
-                                                )
-                                            ) {
-                                                let delCommand = unixSystem
-                                                    ? "rm"
-                                                    : "del";
-                                                terminal.sendText(
-                                                    `${delCommand} ${fileName}`
-                                                );
-                                                willSaveTextDocumentDisposable?.dispose();
-                                                willSaveTextDocumentDisposable =
-                                                    null;
-                                            }
-                                        }
-                                    );
                                 }
                             });
                     });

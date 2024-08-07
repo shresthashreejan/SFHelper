@@ -18,7 +18,7 @@ SF Helper is a Visual Studio Code extension designed to streamline Salesforce de
 Before using the SF Helper extension, ensure you have the following prerequisites installed:
 
 1. **Salesforce CLI (SFDX):** Install Salesforce CLI from the official Salesforce website ([Salesforce CLI Installation](https://developer.salesforce.com/docs/atlas.en-us.sfdx_setup.meta/sfdx_setup/sfdx_setup_install_cli.htm)).
-2. **Powershell (Windows)** Make sure Powershell is installed and accessible from your terminal environment.
+2. **Powershell (Windows):da** Make sure Powershell is installed and accessible from your terminal environment.
 
 ## Installation
 
