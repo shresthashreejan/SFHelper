@@ -183,6 +183,9 @@ function executeAnonymousCode() {
                                 );
                                 terminal.sendText(`${delCommand} ${fileName}`);
                                 terminal.show();
+                                vscode.commands.executeCommand(
+                                    "workbench.action.closeActiveEditor"
+                                );
                             }
                         });
                     });
