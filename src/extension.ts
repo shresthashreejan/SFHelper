@@ -202,8 +202,8 @@ async function monitorLogs() {
         }
 
         let monitorCommand = unixSystem
-            ? `sf apex tail log -c -d ${debugLevelName} | select-string -pattern "exception"`
-            : `sf apex tail log -c -d ${debugLevelName} | grep "exception"`;
+            ? `sf apex tail log -c -d ${debugLevelName} | grep "exception"`
+            : `sf apex tail log -c -d ${debugLevelName} | select-string -pattern "exception"`;
         let delCommand = unixSystem ? "rm" : "del";
 
         terminal.sendText(`${delCommand} debuglevel.json`);
