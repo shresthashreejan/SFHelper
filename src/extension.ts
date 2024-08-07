@@ -170,21 +170,25 @@ function executeAnonymousCode() {
                 .openTextDocument(vscode.Uri.file(filePath))
                 .then((document) => {
                     vscode.window.showTextDocument(document).then(() => {
-                        vscode.workspace.onWillSaveTextDocument((event) => {
-                            if (
-                                event.document.fileName === filePath &&
-                                event.reason ===
-                                    vscode.TextDocumentSaveReason.Manual
-                            ) {
-                                let delCommand = unixSystem ? "rm" : "del";
-                                const terminal = getTerminal(false);
-                                terminal.sendText(
-                                    `sf apex run -f ./${fileName}`
-                                );
-                                terminal.sendText(`${delCommand} ${fileName}`);
-                                terminal.show();
-                            }
-                        });
+                        const willSaveTextDocumentDisposable =
+                            vscode.workspace.onWillSaveTextDocument((event) => {
+                                if (
+                                    event.document.fileName === filePath &&
+                                    event.reason ===
+                                        vscode.TextDocumentSaveReason.Manual
+                                ) {
+                                    let delCommand = unixSystem ? "rm" : "del";
+                                    const terminal = getTerminal(false);
+                                    terminal.sendText(
+                                        `sf apex run -f ./${fileName}`
+                                    );
+                                    terminal.sendText(
+                                        `${delCommand} ${fileName}`
+                                    );
+                                    terminal.show();
+                                    willSaveTextDocumentDisposable.dispose();
+                                }
+                            });
                     });
                 });
         }
