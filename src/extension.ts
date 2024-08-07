@@ -8,6 +8,8 @@ import { getTerminal } from "./getTerminal";
 const platform = os.platform();
 const unixSystem: boolean = platform !== "win32" ? true : false;
 
+let willSaveTextDocumentDisposable: vscode.Disposable | null = null;
+
 export function activate(context: vscode.ExtensionContext) {
     const commands = [
         {
@@ -170,7 +172,10 @@ function executeAnonymousCode() {
                 .openTextDocument(vscode.Uri.file(filePath))
                 .then((document) => {
                     vscode.window.showTextDocument(document).then(() => {
-                        const willSaveTextDocumentDisposable =
+                        if (willSaveTextDocumentDisposable) {
+                            willSaveTextDocumentDisposable.dispose();
+                        }
+                        willSaveTextDocumentDisposable =
                             vscode.workspace.onWillSaveTextDocument((event) => {
                                 if (
                                     event.document.fileName === filePath &&
@@ -182,25 +187,25 @@ function executeAnonymousCode() {
                                         `sf apex run -f ./${fileName}`
                                     );
                                     terminal.show();
-                                    const didCloseTextDocumentDisposable =
-                                        vscode.workspace.onDidCloseTextDocument(
-                                            (document) => {
-                                                if (
-                                                    document.fileName.endsWith(
-                                                        "anonymouscode.apex"
-                                                    )
-                                                ) {
-                                                    let delCommand = unixSystem
-                                                        ? "rm"
-                                                        : "del";
-                                                    terminal.sendText(
-                                                        `${delCommand} ${fileName}`
-                                                    );
-                                                    willSaveTextDocumentDisposable.dispose();
-                                                    didCloseTextDocumentDisposable.dispose();
-                                                }
+                                    vscode.workspace.onDidCloseTextDocument(
+                                        (document) => {
+                                            if (
+                                                document.fileName.endsWith(
+                                                    "anonymouscode.apex"
+                                                )
+                                            ) {
+                                                let delCommand = unixSystem
+                                                    ? "rm"
+                                                    : "del";
+                                                terminal.sendText(
+                                                    `${delCommand} ${fileName}`
+                                                );
+                                                willSaveTextDocumentDisposable?.dispose();
+                                                willSaveTextDocumentDisposable =
+                                                    null;
                                             }
-                                        );
+                                        }
+                                    );
                                 }
                             });
                     });
