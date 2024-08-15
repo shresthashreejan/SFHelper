@@ -136,7 +136,7 @@ function executeCommand(action: string) {
             break;
         case "runTest":
             cmdPrefix = "sf apex run test -n";
-            cmdSuffix = "-r human -c -y";
+            cmdSuffix = "-r human -y";
             filePath = path.basename(filePath, path.extname(filePath));
             break;
         default:
