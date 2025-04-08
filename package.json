@@ -3,13 +3,13 @@
   "displayName": "SF Helper",
   "publisher": "shreejan",
   "description": "Salesforce Helper streamlines Salesforce development, offering swift access to key operations like deploying, retrieving, running tests, executing anonymous code, and managing debug logs.",
-  "version": "0.3.5",
+  "version": "0.3.6",
   "license": "GPL-3.0",
   "engines": {
     "vscode": "^1.70.0"
   },
   "categories": [
-    "Extension Packs"
+    "Other"
   ],
   "repository": {
     "type": "git",
@@ -112,6 +112,11 @@
         "mac": "cmd+'",
         "when": "editorTextFocus || terminalFocus"
       }
+    ],
+    "tags": [
+      "salesforce",
+      "salesforce development",
+      "sfdx"
     ]
   },
   "scripts": {
