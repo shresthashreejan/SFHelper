@@ -10,7 +10,8 @@ const unixSystem: boolean = platform !== "win32" ? true : false;
 
 let willSaveTextDocumentDisposable: vscode.Disposable | null = null;
 
-export function activate(context: vscode.ExtensionContext) {
+export function activate(context: vscode.ExtensionContext)
+{
     const commands = [
         {
             command: "sfhelper.deploy",
@@ -54,10 +55,13 @@ export function activate(context: vscode.ExtensionContext) {
         },
     ];
 
-    commands.forEach(({ command, action }) => {
+    commands.forEach(({ command, action }) =>
+    {
         context.subscriptions.push(
-            vscode.commands.registerCommand(command, () => {
-                switch (action) {
+            vscode.commands.registerCommand(command, () =>
+            {
+                switch(action)
+                {
                     case "executeAnonymousCode":
                         executeAnonymousCode();
                         break;
@@ -81,10 +85,14 @@ export function activate(context: vscode.ExtensionContext) {
 
     let openDropdown = vscode.commands.registerCommand(
         "sfhelper.openDropdown",
-        () => {
-            vscode.window.showQuickPick(items).then((selectedItem) => {
-                if (selectedItem) {
-                    switch (selectedItem.action) {
+        () =>
+        {
+            vscode.window.showQuickPick(items).then((selectedItem) =>
+            {
+                if(selectedItem)
+                {
+                    switch(selectedItem.action)
+                    {
                         case "executeAnonymousCode":
                             executeAnonymousCode();
                             break;
@@ -104,18 +112,21 @@ export function activate(context: vscode.ExtensionContext) {
     context.subscriptions.push(openDropdown);
 }
 
-function executeCommand(action: string) {
+function executeCommand(action: string)
+{
     const editor = vscode.window.activeTextEditor;
     let cmdPrefix: string = "";
     let cmdSuffix: string = "";
 
-    if (!editor) {
+    if(!editor)
+    {
         vscode.window.showErrorMessage("No active editor found.");
         return;
     }
     let filePath = editor.document.uri.fsPath;
 
-    switch (action) {
+    switch(action)
+    {
         case "deploy":
             cmdPrefix = "sf project deploy start -d";
             cmdSuffix = "-c";
@@ -148,18 +159,21 @@ function executeCommand(action: string) {
     terminal.show();
 }
 
-function executeAnonymousCode() {
-    if (
+function executeAnonymousCode()
+{
+    if(
         vscode.workspace.workspaceFolders &&
         vscode.workspace.workspaceFolders.length > 0
-    ) {
+    )
+    {
         const fileName = "anonymouscode.apex";
         const filePath = path.join(
             vscode.workspace.workspaceFolders[0].uri.fsPath,
             fileName
         );
 
-        if (!fs.existsSync(filePath)) {
+        if(!fs.existsSync(filePath))
+        {
             fs.writeFileSync(
                 filePath,
                 "// Write your Apex code here, then press Ctrl+S to execute anonymously.",
@@ -167,21 +181,27 @@ function executeAnonymousCode() {
             );
         }
 
-        if (fs.existsSync(filePath)) {
+        if(fs.existsSync(filePath))
+        {
             vscode.workspace
                 .openTextDocument(vscode.Uri.file(filePath))
-                .then((document) => {
-                    vscode.window.showTextDocument(document).then(() => {
-                        if (willSaveTextDocumentDisposable) {
+                .then((document) =>
+                {
+                    vscode.window.showTextDocument(document).then(() =>
+                    {
+                        if(willSaveTextDocumentDisposable)
+                        {
                             willSaveTextDocumentDisposable.dispose();
                         }
                         willSaveTextDocumentDisposable =
-                            vscode.workspace.onWillSaveTextDocument((event) => {
-                                if (
+                            vscode.workspace.onWillSaveTextDocument((event) =>
+                            {
+                                if(
                                     event.document.fileName === filePath &&
                                     event.reason ===
                                         vscode.TextDocumentSaveReason.Manual
-                                ) {
+                                )
+                                {
                                     const terminal = getTerminal(false);
                                     terminal.sendText(
                                         `sf apex run -f ./${fileName}`
@@ -195,16 +215,19 @@ function executeAnonymousCode() {
     }
 }
 
-async function monitorLogs() {
+async function monitorLogs()
+{
     const terminal = getTerminal(true);
-    try {
+    try
+    {
         const debugLevelData = await fetchDataFromDebugLevel(terminal);
         let debugLevelName =
             debugLevelData && debugLevelData.result
                 ? debugLevelData.result?.records[0]?.DeveloperName
                 : null;
 
-        if (!debugLevelName) {
+        if(!debugLevelName)
+        {
             debugLevelName = "SF_Helper";
             createDebugLevel(terminal, debugLevelName);
         }
@@ -215,14 +238,17 @@ async function monitorLogs() {
         terminal.sendText(`${delCommand} debuglevel.json`);
         terminal.sendText(`clear`);
         terminal.sendText(monitorCommand);
-    } catch (error) {
+    }
+    catch(error)
+    {
         console.error(error);
         return;
     }
     terminal.show();
 }
 
-async function fetchDataFromDebugLevel(terminal: vscode.Terminal) {
+async function fetchDataFromDebugLevel(terminal: vscode.Terminal)
+{
     let fetchCommand = unixSystem
         ? 'sf data query -q "SELECT Id, DeveloperName FROM DebugLevel" -t -r "json" > debuglevel.json'
         : 'sf data query -q "SELECT Id, DeveloperName FROM DebugLevel" -t -r "json" | out-file -encoding oem debuglevel.json';
@@ -233,13 +259,15 @@ async function fetchDataFromDebugLevel(terminal: vscode.Terminal) {
     return JSON.parse(data);
 }
 
-function createDebugLevel(terminal: vscode.Terminal, debugLevelName: string) {
+function createDebugLevel(terminal: vscode.Terminal, debugLevelName: string)
+{
     terminal.sendText(
         `sf data create record -s DebugLevel -t -v "DeveloperName=${debugLevelName} MasterLabel=${debugLevelName} ApexCode=FINEST ApexProfiling=FINER Callout=DEBUG Database=DEBUG System=DEBUG Validation=FINE Visualforce=FINE"`
     );
 }
 
-function deleteLogs() {
+function deleteLogs()
+{
     let terminal = getTerminal(false);
     let csvFile = "debuglogs.csv";
     let delCommand = unixSystem ? "rm" : "del";
