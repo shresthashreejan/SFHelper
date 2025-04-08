@@ -112,11 +112,6 @@
         "mac": "cmd+'",
         "when": "editorTextFocus || terminalFocus"
       }
-    ],
-    "tags": [
-      "salesforce",
-      "salesforce development",
-      "sfdx"
     ]
   },
   "scripts": {
