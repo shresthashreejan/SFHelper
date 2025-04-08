@@ -155,7 +155,7 @@ function executeCommand(action: string)
     }
 
     let terminal = getTerminal(false);
-    terminal.sendText(`${cmdPrefix} ${filePath} ${cmdSuffix}`);
+    terminal.sendText(`${cmdPrefix} "${filePath}" ${cmdSuffix}`);
     terminal.show();
 }
 
