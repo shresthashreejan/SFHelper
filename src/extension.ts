@@ -232,7 +232,20 @@ async function monitorLogs()
             createDebugLevel(terminal, debugLevelName);
         }
 
-        let monitorCommand = `sf apex tail log -c -d ${debugLevelName}`;
+        let filterString : string = '';
+        let filterCommand = unixSystem ? 'grep -iE' : 'select-string -pattern'
+        let filterKeywords = await vscode.window.showInputBox({
+            prompt: "Enter keywords to filter logs, separated by commas. (Example: assert, exception)",
+            placeHolder: "Leave blank to view all logs"
+        });
+
+        if(filterKeywords)
+        {
+            const keywordsArray: string[] = filterKeywords.split(',');
+            filterString = constructFilterString(keywordsArray);
+        }
+
+        let monitorCommand = `sf apex tail log -c -d ${debugLevelName} | ${filterCommand} "${filterString}"`;
         let delCommand = unixSystem ? "rm" : "del";
 
         terminal.sendText(`${delCommand} debuglevel.json`);
@@ -245,6 +258,11 @@ async function monitorLogs()
         return;
     }
     terminal.show();
+}
+
+function constructFilterString(keywordsArray : string[])
+{
+    return keywordsArray.filter(keyword => keyword).join('|');
 }
 
 async function fetchDataFromDebugLevel(terminal: vscode.Terminal)
