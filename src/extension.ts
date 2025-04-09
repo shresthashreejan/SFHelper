@@ -233,7 +233,8 @@ async function monitorLogs()
         }
 
         let filterString : string = '';
-        let filterCommand = unixSystem ? 'grep -iE' : 'select-string -pattern'
+        let filterCommand = unixSystem ? 'grep -iE' : 'select-string -pattern';
+        let delCommand = unixSystem ? "rm" : "del";
         let filterKeywords = await vscode.window.showInputBox({
             prompt: "Enter keywords to filter logs, separated by commas. (Example: assert, exception)",
             placeHolder: "Leave blank to view all logs"
@@ -245,8 +246,7 @@ async function monitorLogs()
             filterString = constructFilterString(keywordsArray);
         }
 
-        let monitorCommand = `sf apex tail log -c -d ${debugLevelName} | ${filterCommand} "${filterString}"`;
-        let delCommand = unixSystem ? "rm" : "del";
+        let monitorCommand = filterString ? `sf apex tail log -c -d ${debugLevelName} | ${filterCommand} "${filterString}"` : `sf apex tail log -c -d ${debugLevelName}`;
 
         terminal.sendText(`${delCommand} debuglevel.json`);
         terminal.sendText(`clear`);
@@ -274,6 +274,7 @@ async function fetchDataFromDebugLevel(terminal: vscode.Terminal)
     terminal.sendText(fetchCommand);
     await new Promise((resolve) => setTimeout(resolve, 10000));
     const data = fs.readFileSync("debuglevel.json", "utf8");
+    terminal.sendText('clear');
     return JSON.parse(data);
 }
 
@@ -282,6 +283,7 @@ function createDebugLevel(terminal: vscode.Terminal, debugLevelName: string)
     terminal.sendText(
         `sf data create record -s DebugLevel -t -v "DeveloperName=${debugLevelName} MasterLabel=${debugLevelName} ApexCode=FINEST ApexProfiling=FINER Callout=DEBUG Database=DEBUG System=DEBUG Validation=FINE Visualforce=FINE"`
     );
+    terminal.sendText('clear');
 }
 
 function deleteLogs()
