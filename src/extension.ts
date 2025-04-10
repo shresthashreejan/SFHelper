@@ -220,7 +220,7 @@ async function monitorLogs()
         let filterCommand = unixSystem ? 'grep -iE' : 'select-string -pattern';
         let delCommand = unixSystem ? "rm" : "del";
         let filterKeywords = await vscode.window.showInputBox({
-            prompt: "Enter keywords to filter logs, separated by commas. (Example: assert, exception)",
+            prompt: "Enter keywords to filter logs, separated by commas. (Example: assert,exception,error)",
             placeHolder: "Leave blank to view all logs"
         });
 
