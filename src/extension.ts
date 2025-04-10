@@ -57,10 +57,38 @@ export function activate(context: vscode.ExtensionContext)
 
     commands.forEach(({ command, action }) =>
     {
-        context.subscriptions.push(
-            vscode.commands.registerCommand(command, () =>
+        context.subscriptions.push(vscode.commands.registerCommand(command, () =>
+        {
+            switch(action)
             {
-                switch(action)
+                case "executeAnonymousCode":
+                    executeAnonymousCode();
+                    break;
+                case "monitorDebugLogs":
+                    monitorLogs();
+                    break;
+                case "deleteDebugLogs":
+                    deleteLogs();
+                    break;
+                default:
+                    executeCommand(action);
+                    break;
+            }
+        }));
+    });
+
+    let items = commands.map(({ label, action }) => ({
+        label: `SF Helper: ${label}`,
+        action: `${action}`,
+    }));
+
+    let openDropdown = vscode.commands.registerCommand("sfhelper.openDropdown", () =>
+    {
+        vscode.window.showQuickPick(items).then((selectedItem) =>
+        {
+            if(selectedItem)
+            {
+                switch(selectedItem.action)
                 {
                     case "executeAnonymousCode":
                         executeAnonymousCode();
@@ -72,43 +100,12 @@ export function activate(context: vscode.ExtensionContext)
                         deleteLogs();
                         break;
                     default:
-                        executeCommand(action);
+                        executeCommand(selectedItem.action);
+                        break;
                 }
-            })
-        );
+            }
+        });
     });
-
-    let items = commands.map(({ label, action }) => ({
-        label: `SF Helper: ${label}`,
-        action: `${action}`,
-    }));
-
-    let openDropdown = vscode.commands.registerCommand(
-        "sfhelper.openDropdown",
-        () =>
-        {
-            vscode.window.showQuickPick(items).then((selectedItem) =>
-            {
-                if(selectedItem)
-                {
-                    switch(selectedItem.action)
-                    {
-                        case "executeAnonymousCode":
-                            executeAnonymousCode();
-                            break;
-                        case "monitorDebugLogs":
-                            monitorLogs();
-                            break;
-                        case "deleteDebugLogs":
-                            deleteLogs();
-                            break;
-                        default:
-                            executeCommand(selectedItem.action);
-                    }
-                }
-            });
-        }
-    );
     context.subscriptions.push(openDropdown);
 }
 
@@ -161,10 +158,7 @@ function executeCommand(action: string)
 
 function executeAnonymousCode()
 {
-    if(
-        vscode.workspace.workspaceFolders &&
-        vscode.workspace.workspaceFolders.length > 0
-    )
+    if(vscode.workspace.workspaceFolders && vscode.workspace.workspaceFolders.length > 0)
     {
         const fileName = "anonymouscode.apex";
         const filePath = path.join(
@@ -183,34 +177,27 @@ function executeAnonymousCode()
 
         if(fs.existsSync(filePath))
         {
-            vscode.workspace
-                .openTextDocument(vscode.Uri.file(filePath))
-                .then((document) =>
+            vscode.workspace.openTextDocument(vscode.Uri.file(filePath)).then((document) =>
+            {
+                vscode.window.showTextDocument(document).then(() =>
                 {
-                    vscode.window.showTextDocument(document).then(() =>
+                    if(willSaveTextDocumentDisposable)
                     {
-                        if(willSaveTextDocumentDisposable)
+                        willSaveTextDocumentDisposable.dispose();
+                    }
+                    willSaveTextDocumentDisposable = vscode.workspace.onWillSaveTextDocument((event) =>
+                    {
+                        if(event.document.fileName === filePath && event.reason === vscode.TextDocumentSaveReason.Manual)
                         {
-                            willSaveTextDocumentDisposable.dispose();
+                            const terminal = getTerminal(false);
+                            terminal.sendText(
+                                `sf apex run -f ./${fileName}`
+                            );
+                            terminal.show();
                         }
-                        willSaveTextDocumentDisposable =
-                            vscode.workspace.onWillSaveTextDocument((event) =>
-                            {
-                                if(
-                                    event.document.fileName === filePath &&
-                                    event.reason ===
-                                        vscode.TextDocumentSaveReason.Manual
-                                )
-                                {
-                                    const terminal = getTerminal(false);
-                                    terminal.sendText(
-                                        `sf apex run -f ./${fileName}`
-                                    );
-                                    terminal.show();
-                                }
-                            });
                     });
                 });
+            });
         }
     }
 }
@@ -221,10 +208,7 @@ async function monitorLogs()
     try
     {
         const debugLevelData = await fetchDataFromDebugLevel(terminal);
-        let debugLevelName =
-            debugLevelData && debugLevelData.result
-                ? debugLevelData.result?.records[0]?.DeveloperName
-                : null;
+        let debugLevelName = debugLevelData && debugLevelData.result ? debugLevelData.result?.records[0]?.DeveloperName : null;
 
         if(!debugLevelName)
         {
@@ -260,11 +244,6 @@ async function monitorLogs()
     terminal.show();
 }
 
-function constructFilterString(keywordsArray : string[])
-{
-    return keywordsArray.filter(keyword => keyword).join('|');
-}
-
 async function fetchDataFromDebugLevel(terminal: vscode.Terminal)
 {
     let fetchCommand = unixSystem
@@ -284,6 +263,11 @@ function createDebugLevel(terminal: vscode.Terminal, debugLevelName: string)
         `sf data create record -s DebugLevel -t -v "DeveloperName=${debugLevelName} MasterLabel=${debugLevelName} ApexCode=FINEST ApexProfiling=FINER Callout=DEBUG Database=DEBUG System=DEBUG Validation=FINE Visualforce=FINE"`
     );
     terminal.sendText('clear');
+}
+
+function constructFilterString(keywordsArray : string[])
+{
+    return keywordsArray.filter(keyword => keyword).join('|');
 }
 
 function deleteLogs()
