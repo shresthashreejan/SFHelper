@@ -39,6 +39,14 @@ export function activate(context: vscode.ExtensionContext)
             label: "Run Active Test Class",
         },
         {
+            command: "sfhelper.deployFilepath",
+            title: "Deploy Custom Filepath"
+        },
+        {
+            command: "sfhelper.retrieveFilepath",
+            title: "Retrieve Custom Filepath"
+        },
+        {
             command: "sfhelper.executeAnonymousCode",
             action: "executeAnonymousCode",
             label: "Execute Anonymous Code",
@@ -71,7 +79,7 @@ export function activate(context: vscode.ExtensionContext)
                     deleteLogs();
                     break;
                 default:
-                    executeCommand(action);
+                    if(action) executeCommand(action);
                     break;
             }
         }));
@@ -109,7 +117,7 @@ export function activate(context: vscode.ExtensionContext)
     context.subscriptions.push(openDropdown);
 }
 
-function executeCommand(action: string)
+async function executeCommand(action: string)
 {
     const editor = vscode.window.activeTextEditor;
     let cmdPrefix: string = "";
@@ -120,7 +128,16 @@ function executeCommand(action: string)
         vscode.window.showErrorMessage("No active editor found.");
         return;
     }
-    let filePath = editor.document.uri.fsPath;
+    let filePath;
+    let filePathInput;
+    if(action == "deployFilepath" || action == "retrieveFilepath")
+    {
+        filePathInput = await vscode.window.showInputBox({
+            prompt: "Enter complete file path.",
+            placeHolder: "Leave blank to execute on active file"
+        });
+    }
+    filePath = filePathInput ? filePathInput : editor.document.uri.fsPath;
 
     switch(action)
     {
@@ -146,6 +163,14 @@ function executeCommand(action: string)
             cmdPrefix = "sf apex run test -n";
             cmdSuffix = "-r human -y";
             filePath = path.basename(filePath, path.extname(filePath));
+            break;
+        case "deployFilepath":
+            cmdPrefix = "sf project deploy start -d";
+            cmdSuffix = "-c";
+            break;
+        case "retrieveFilepath":
+            cmdPrefix = "sf project retrieve start -d";
+            cmdSuffix = "-c";
             break;
         default:
             break;

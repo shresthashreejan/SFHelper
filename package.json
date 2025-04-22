@@ -3,7 +3,7 @@
   "displayName": "SF Helper",
   "publisher": "shreejan",
   "description": "Salesforce Helper streamlines Salesforce development, offering swift access to key operations like deploying, retrieving, running tests, executing anonymous code, and managing debug logs.",
-  "version": "1.2.0",
+  "version": "1.3.0",
   "license": "GPL-3.0",
   "engines": {
     "vscode": "^1.70.0"
@@ -39,6 +39,14 @@
       {
         "command": "sfhelper.runTest",
         "title": "SF Helper: Run Active Test Class"
+      },
+      {
+        "command": "sfhelper.deployFilepath",
+        "title": "SF Helper: Deploy Custom Filepath"
+      },
+      {
+        "command": "sfhelper.retrieveFilepath",
+        "title": "SF Helper: Retrieve Custom Filepath"
       },
       {
         "command": "sfhelper.executeAnonymousCode",
@@ -89,21 +97,33 @@
         "when": "editorTextFocus || terminalFocus"
       },
       {
-        "command": "sfhelper.executeAnonymousCode",
+        "command": "sfhelper.deployFilepath",
         "key": "ctrl+shift+6",
         "mac": "cmd+shift+6",
         "when": "editorTextFocus || terminalFocus"
       },
       {
-        "command": "sfhelper.monitorDebugLogs",
+        "command": "sfhelper.retrieveFilepath",
         "key": "ctrl+shift+7",
         "mac": "cmd+shift+7",
         "when": "editorTextFocus || terminalFocus"
       },
       {
-        "command": "sfhelper.deleteDebugLogs",
+        "command": "sfhelper.executeAnonymousCode",
         "key": "ctrl+shift+8",
         "mac": "cmd+shift+8",
+        "when": "editorTextFocus || terminalFocus"
+      },
+      {
+        "command": "sfhelper.monitorDebugLogs",
+        "key": "ctrl+shift+9",
+        "mac": "cmd+shift+9",
+        "when": "editorTextFocus || terminalFocus"
+      },
+      {
+        "command": "sfhelper.deleteDebugLogs",
+        "key": "ctrl+shift+0",
+        "mac": "cmd+shift+0",
         "when": "editorTextFocus || terminalFocus"
       },
       {
