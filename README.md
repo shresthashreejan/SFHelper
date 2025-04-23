@@ -13,8 +13,9 @@ SF Helper is a Visual Studio Code extension designed to streamline Salesforce de
 -   **Retrieve Custom Filepath:** Retrieve custom filepath.
 -   **Execute Anonymous Apex Code:** Execute anonymous Apex code.
 -   **Monitor Debug Logs:** Monitor debug logs in real-time.
--   **Disable Org's Source Tracking:** Disable org's source tracking for faster deployments.
 -   **Delete All Debug Logs:** Delete all debug logs from the org.
+-   **Enable Org's Source Tracking:** Enable org's source tracking.
+-   **Disable Org's Source Tracking:** Disable org's source tracking for faster deployments.
 
 ## Prerequisites
 
@@ -46,13 +47,10 @@ Once installed, you can utilize the SF Helper extension using the following keyb
 -   **Retrieve Custom Filepath:** `Ctrl+Shift+7` (Windows/Linux) or `Cmd+Shift+7` (Mac)
 -   **Execute Anonymous Apex Code:** `Ctrl+Shift+8` (Windows/Linux) or `Cmd+Shift+8` (Mac)
 -   **Monitor Debug Logs:** `Ctrl+Shift+9` (Windows/Linux) or `Cmd+Shift+9` (Mac)
--   **Disable Org's Source Tracking:** (Dropdown Menu)
 -   **Delete All Debug Logs:** (Dropdown Menu)
+-   **Enable Org's Source Tracking:** (Dropdown Menu)
+-   **Disable Org's Source Tracking:** (Dropdown Menu)
 
 ## Contributions
 
 If you encounter any issues or have suggestions for improvement, feel free to contribute to the project by submitting bug reports or pull requests on the [GitHub Repository](https://github.com/shresthashreejan/SFHelper).
-
----
-
-Thank you for using SF Helper! If you find this extension helpful, consider leaving a review or rating on the Visual Studio Code Marketplace.
