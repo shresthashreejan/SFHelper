@@ -178,7 +178,8 @@ async function executeCommand(action: string)
             return;
         }
     }
-    filePath = filePathInput !== ""? filePathInput : editor.document.uri.fsPath;
+
+    filePath = filePathInput ? filePathInput : editor.document.uri.fsPath;
 
     switch(action)
     {
