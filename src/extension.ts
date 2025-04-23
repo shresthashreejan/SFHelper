@@ -143,11 +143,18 @@ async function executeCommand(action: string)
     }
     let filePath;
     let filePathInput;
-    if(action == "deployFilepath" || action == "retrieveFilepath")
+    if(action == "deployFilepath")
     {
         filePathInput = await vscode.window.showInputBox({
-            prompt: "Enter complete file path.",
-            placeHolder: "Leave blank to execute on active file"
+            prompt: "Provide the absolute path for deployment.",
+            placeHolder: "Enter absolute path for deployment. Leave blank to execute on active file."
+        });
+    }
+    else if(action == "retrieveFilepath")
+    {
+        filePathInput = await vscode.window.showInputBox({
+            prompt: "Provide the absolute path for retrieval.",
+            placeHolder: "Enter absolute path for retrieval. Leave blank to execute on active file."
         });
     }
     filePath = filePathInput ? filePathInput : editor.document.uri.fsPath;

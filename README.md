@@ -20,7 +20,7 @@ SF Helper is a Visual Studio Code extension designed to streamline Salesforce de
 
 Before using the SF Helper extension, ensure you have the following prerequisites installed:
 
-1. **Salesforce CLI (SFDX):** Install Salesforce CLI from the official Salesforce website ([Salesforce CLI Installation](https://developer.salesforce.com/docs/atlas.en-us.sfdx_setup.meta/sfdx_setup/sfdx_setup_install_cli.htm)).
+1. **Salesforce CLI:** Install Salesforce CLI from the official Salesforce website ([Salesforce CLI Installation](https://developer.salesforce.com/docs/atlas.en-us.sfdx_setup.meta/sfdx_setup/sfdx_setup_install_cli.htm)).
 2. **Powershell (Windows):** Make sure Powershell is installed and accessible from your terminal environment.
 
 ## Installation
@@ -34,8 +34,9 @@ To install the SF Helper extension, follow these steps:
 
 ## Usage
 
-Once installed, you can utilize the SF Helper extension using the following keyboard shortcuts:
+Once installed, you can utilize the SF Helper extension using the following keyboard shortcuts or from the dropdown menu:
 
+-   **Show All Options (Dropdown):** `Ctrl+'` (Windows/Linux) or `Cmd+'` (Mac)
 -   **Deploy Active File:** `Ctrl+Shift+1` (Windows/Linux) or `Cmd+Shift+1` (Mac)
 -   **Deploy Active Folder:** `Ctrl+Shift+2` (Windows/Linux) or `Cmd+Shift+2` (Mac)
 -   **Retrieve Active File:** `Ctrl+Shift+3` (Windows/Linux) or `Cmd+Shift+3` (Mac)
@@ -45,11 +46,8 @@ Once installed, you can utilize the SF Helper extension using the following keyb
 -   **Retrieve Custom Filepath:** `Ctrl+Shift+7` (Windows/Linux) or `Cmd+Shift+7` (Mac)
 -   **Execute Anonymous Apex Code:** `Ctrl+Shift+8` (Windows/Linux) or `Cmd+Shift+8` (Mac)
 -   **Monitor Debug Logs:** `Ctrl+Shift+9` (Windows/Linux) or `Cmd+Shift+9` (Mac)
--   **Disable Org's Source Tracking:** `Ctrl+Shift+0` (Windows/Linux) or `Cmd+Shift+0` (Mac)
--   **Delete All Debug Logs:** `Ctrl+Shift+-` (Windows/Linux) or `Cmd+Shift+-` (Mac)
--   **Show All Options (Dropdown):** `Ctrl+'` (Windows/Linux) or `Cmd+'` (Mac)
-
-You can use these shortcuts within the editor to quickly access and execute the corresponding actions provided by SF Helper.
+-   **Disable Org's Source Tracking:** (Dropdown Menu)
+-   **Delete All Debug Logs:** (Dropdown Menu)
 
 ## Contributions
 
