@@ -2,8 +2,8 @@
   "name": "sfhelper",
   "displayName": "SF Helper",
   "publisher": "shreejan",
-  "description": "Salesforce Helper streamlines Salesforce development, offering swift access to key operations like deploying, retrieving, running tests, executing anonymous code, and managing debug logs.",
-  "version": "1.4.0",
+  "description": "SF Helper streamlines Salesforce development, offering swift access to key operations like deploying, retrieving, running tests, executing anonymous code, and managing debug logs.",
+  "version": "1.5.0",
   "license": "GPL-3.0",
   "engines": {
     "vscode": "^1.70.0"
@@ -55,6 +55,10 @@
       {
         "command": "sfhelper.monitorDebugLogs",
         "title": "SF Helper: Monitor Debug Logs"
+      },
+      {
+        "command": "sfhelper.disableSourceTracking",
+        "title": "SF Helper: Disable Org's Source Tracking"
       },
       {
         "command": "sfhelper.deleteDebugLogs",
@@ -121,9 +125,15 @@
         "when": "editorTextFocus || terminalFocus"
       },
       {
-        "command": "sfhelper.deleteDebugLogs",
+        "command": "sfhelper.disableSourceTracking",
         "key": "ctrl+shift+0",
         "mac": "cmd+shift+0",
+        "when": "editorTextFocus || terminalFocus"
+      },
+      {
+        "command": "sfhelper.deleteDebugLogs",
+        "key": "ctrl+shift+-",
+        "mac": "cmd+shift+-",
         "when": "editorTextFocus || terminalFocus"
       },
       {

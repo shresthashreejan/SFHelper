@@ -40,11 +40,13 @@ export function activate(context: vscode.ExtensionContext)
         },
         {
             command: "sfhelper.deployFilepath",
-            title: "Deploy Custom Filepath"
+            action: "deployFilepath",
+            label: "Deploy Custom Filepath",
         },
         {
             command: "sfhelper.retrieveFilepath",
-            title: "Retrieve Custom Filepath"
+            action: "retrieveFilepath",
+            label: "Retrieve Custom Filepath",
         },
         {
             command: "sfhelper.executeAnonymousCode",
@@ -55,6 +57,11 @@ export function activate(context: vscode.ExtensionContext)
             command: "sfhelper.monitorDebugLogs",
             action: "monitorDebugLogs",
             label: "Monitor Debug Logs",
+        },
+        {
+            command: "sfhelper.disableSourceTracking",
+            action: "disableSourceTracking",
+            label: "Disable Org's Source Tracking",
         },
         {
             command: "sfhelper.deleteDebugLogs",
@@ -77,6 +84,9 @@ export function activate(context: vscode.ExtensionContext)
                     break;
                 case "deleteDebugLogs":
                     deleteLogs();
+                    break;
+                case "disableSourceTracking":
+                    disableSourceTracking();
                     break;
                 default:
                     if(action) executeCommand(action);
@@ -106,6 +116,9 @@ export function activate(context: vscode.ExtensionContext)
                         break;
                     case "deleteDebugLogs":
                         deleteLogs();
+                        break;
+                    case "disableSourceTracking":
+                        disableSourceTracking();
                         break;
                     default:
                         executeCommand(selectedItem.action);
@@ -307,6 +320,14 @@ function deleteLogs()
     terminal.sendText(delLogsCommand);
     terminal.sendText(`sf data delete bulk -s ApexLog -f ${csvFile}`);
     terminal.sendText(`${delCommand} ${csvFile}`);
+    terminal.show();
+}
+
+function disableSourceTracking()
+{
+    let terminal = getTerminal(false);
+    let disableTrackingCommand = 'sf org disable tracking';
+    terminal.sendText(disableTrackingCommand);
     terminal.show();
 }
 
