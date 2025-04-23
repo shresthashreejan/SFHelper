@@ -59,14 +59,19 @@ export function activate(context: vscode.ExtensionContext)
             label: "Monitor Debug Logs",
         },
         {
-            command: "sfhelper.disableSourceTracking",
-            action: "disableSourceTracking",
-            label: "Disable Org's Source Tracking",
-        },
-        {
             command: "sfhelper.deleteDebugLogs",
             action: "deleteDebugLogs",
             label: "Delete All Debug Logs",
+        },
+        {
+            command: "sfhelper.enableSourceTracking",
+            action: "enableSourceTracking",
+            label: "Enable Org's Source Tracking",
+        },
+        {
+            command: "sfhelper.disableSourceTracking",
+            action: "disableSourceTracking",
+            label: "Disable Org's Source Tracking",
         },
     ];
 
@@ -84,6 +89,9 @@ export function activate(context: vscode.ExtensionContext)
                     break;
                 case "deleteDebugLogs":
                     deleteLogs();
+                    break;
+                case "enableSourceTracking":
+                    enableSourceTracking();
                     break;
                 case "disableSourceTracking":
                     disableSourceTracking();
@@ -117,6 +125,9 @@ export function activate(context: vscode.ExtensionContext)
                     case "deleteDebugLogs":
                         deleteLogs();
                         break;
+                    case "enableSourceTracking":
+                        enableSourceTracking();
+                        break;
                     case "disableSourceTracking":
                         disableSourceTracking();
                         break;
@@ -149,6 +160,11 @@ async function executeCommand(action: string)
             prompt: "Provide the absolute path for deployment.",
             placeHolder: "Enter absolute path for deployment. Leave blank to execute on active file."
         });
+        if(filePathInput === undefined)
+        {
+            vscode.window.showInformationMessage("Deployment canceled. No path provided.");
+            return;
+        }
     }
     else if(action == "retrieveFilepath")
     {
@@ -156,8 +172,13 @@ async function executeCommand(action: string)
             prompt: "Provide the absolute path for retrieval.",
             placeHolder: "Enter absolute path for retrieval. Leave blank to execute on active file."
         });
+        if(filePathInput === undefined)
+        {
+            vscode.window.showInformationMessage("Retrieval canceled. No path provided.");
+            return;
+        }
     }
-    filePath = filePathInput ? filePathInput : editor.document.uri.fsPath;
+    filePath = filePathInput !== ""? filePathInput : editor.document.uri.fsPath;
 
     switch(action)
     {
@@ -327,6 +348,14 @@ function deleteLogs()
     terminal.sendText(delLogsCommand);
     terminal.sendText(`sf data delete bulk -s ApexLog -f ${csvFile}`);
     terminal.sendText(`${delCommand} ${csvFile}`);
+    terminal.show();
+}
+
+function enableSourceTracking()
+{
+    let terminal = getTerminal(false);
+    let enableTrackingCommand = 'sf org enable tracking';
+    terminal.sendText(enableTrackingCommand);
     terminal.show();
 }
 
